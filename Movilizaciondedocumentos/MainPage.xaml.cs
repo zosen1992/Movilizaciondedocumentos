@@ -5,6 +5,9 @@
         private CancellationTokenSource _cts;
         private int intervalo = 60000; // 1 minuto
 
+        private System.Timers.Timer _visualTimer;
+        private TimeSpan _tiempoTranscurrido;
+
         public MainPage()
         {
             InitializeComponent();
@@ -13,12 +16,35 @@
         private async void BtnIniciar_Clicked(object sender, EventArgs e)
         {
             _cts = new CancellationTokenSource();
+
+            _tiempoTranscurrido = TimeSpan.Zero;
+
+            // Iniciar temporizador visual
+            _visualTimer = new System.Timers.Timer(1000); // cada segundo
+            _visualTimer.Elapsed += (s, args) =>
+            {
+                _tiempoTranscurrido = _tiempoTranscurrido.Add(TimeSpan.FromSeconds(1));
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    lblTimer.Text = $"Tiempo transcurrido: {_tiempoTranscurrido:hh\\:mm\\:ss}";
+                });
+            };
+            _visualTimer.Start();
+
             await Task.Run(() => ProcesarArchivosPeriodicamente(_cts.Token));
+
+
         }
 
         private void BtnDetener_Clicked(object sender, EventArgs e)
         {
             _cts?.Cancel();
+            _visualTimer?.Stop();
+            _visualTimer?.Dispose();
+
+            lblTimer.Text = "Tiempo transcurrido: 00:00:00";
+
         }
 
         private async Task ProcesarArchivosPeriodicamente(CancellationToken token)

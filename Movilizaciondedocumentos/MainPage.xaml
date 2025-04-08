@@ -5,11 +5,13 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0" Spacing="25">
-            <Image
-        Source="dotnet_bot.png"
-        HeightRequest="185"
-        Aspect="AspectFit"
-        SemanticProperties.Description="dot net bot in a hovercraft number nine" />
+
+            <Label x:Name="lblTimer"
+               Text="Tiempo transcurrido: 00:00:00"
+               FontSize="Medium"
+               TextColor="Black"
+               HorizontalOptions="Center" />
+
 
             <Entry Placeholder="Origendata" x:Name="txto"/>
             <Entry Placeholder="Destinodata" x:Name="txtd"/>
